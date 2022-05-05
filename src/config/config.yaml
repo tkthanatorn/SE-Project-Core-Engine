@@ -1,0 +1,20 @@
+# database config
+database:
+  # database dev config
+  dev:
+    host: 127.0.0.1
+    port: 5432
+    username: root
+    password: abcd1234
+    dbname: demeter_test
+# end database config
+
+# news source
+news_source:
+  cryptorank: "https://api.cryptorank.io/v0/news"
+# end news source
+
+# news config
+news_config:
+  limit: 200
+# end news config
