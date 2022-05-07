@@ -37,13 +37,13 @@ class Launcher:
 
             CREATE TABLE IF NOT EXISTS News(
                 id serial,
-                title char(256) not null unique,
+                title text not null unique,
                 description text not null,
-                url char(500) not null unique,
+                url text not null unique,
                 icon char(500),
                 source char(64) not null,
                 major_url char(100) not null,
-                minor_url char(500),
+                minor_url text,
                 text text,
                 polarity decimal,
                 sentiment varchar(32),

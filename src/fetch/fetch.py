@@ -1,7 +1,6 @@
 from datetime import datetime
 from threading import Thread
 from requests import get
-from psycopg2.errors import UndefinedColumn
 
 from src.database import Postgresql
 from src.utils import Log
@@ -28,9 +27,16 @@ class Fetch:
 
     @Log('Fetch')
     def __process_with_cryptorank_api(self):
-        # load url
+        # latest news timestamp
+        cur = self.db.execute(f"select Max(date) from News")
+        max_date = cur.fetchone()[0]
+        # setup url
         url = get_config(['news_source', 'cryptorank'])
         url = f"{url}?limit={100}&lang=en&sourceIds=1,5,8,11,14,19,42"
+
+        if max_date != None:
+            max_date = int(datetime.timestamp(max_date)*1000) + 1
+            url += f"&from={max_date}"
 
         # get data & preprocessing
         response = get(url).json()
@@ -45,12 +51,11 @@ class Fetch:
 
         # INSERT NEWS |>
         cur.execute(f"""
-            select id from News where title='{data['title']}';
+            select id from News where title='{data['title']}' or url='{data['url']}';
         """)
         news_id = cur.fetchone()
 
         if news_id != None:
-            print('ALREADY EXIST')
             return
 
         cur.execute(f"""
