@@ -21,24 +21,35 @@ class Launcher:
         )
 
         # TODO: setup tables
+        #! Drop Table
+        self.db.execute_commit(f"""
+            DROP TABLE News_Tags;
+        """)
+        self.db.execute_commit(f"""
+            DROP TABLE News;
+        """)
+        self.db.execute_commit(f"""
+            DROP TABLE Tags;
+        """)
+
         # @table: News
         self.db.execute_commit(f"""
+
             CREATE TABLE IF NOT EXISTS News(
                 id serial,
                 title char(256) not null unique,
-                description char(1000) not null,
+                description text not null,
                 url char(500) not null unique,
-                tags char(256),
                 icon char(500),
                 source char(64) not null,
                 major_url char(100) not null,
-                minor_url char(64),
+                minor_url char(500),
                 text text,
                 polarity decimal,
                 sentiment varchar(32),
                 date timestamp,
 
-                primary key (id)
+                PRIMARY KEY (id)
             );
         """)
 
@@ -51,13 +62,38 @@ class Launcher:
                 minor_url char(64),
                 xpath char(256),
 
-                primary key (id)
+                PRIMARY KEY (id)
+            )
+        """)
+
+        # @table: Tags
+        self.db.execute_commit(f"""
+            CREATE TABLE IF NOT EXISTS Tags(
+                id serial not null,
+                name varchar(64) unique,
+                key varchar(64) unique,
+                symbol varchar(32),
+
+                PRIMARY KEY (id)
+            )
+        """)
+
+        # @table: News_Tags
+        self.db.execute_commit(f"""
+            CREATE TABLE IF NOT EXISTS News_Tags(
+                id serial not null,
+                news_id serial not null,
+                tags_id serial not null,
+
+                PRIMARY KEY (id),
+                CONSTRAINT fk_news FOREIGN KEY(news_id) REFERENCES News(id), 
+                CONSTRAINT fk_tags FOREIGN KEY(tags_id) REFERENCES Tags(id) 
             )
         """)
 
         # <|- Database
         self.miner = Miner(db=self.db, delay=1)
-        self.fetch = Fetch(db=self.db, delay=5)
+        self.fetch = Fetch(db=self.db, delay=1)
 
     # provider of interval execute methods.
     def update(self):

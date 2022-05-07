@@ -1,5 +1,7 @@
+from datetime import datetime
 from threading import Thread
 from requests import get
+from psycopg2.errors import UndefinedColumn
 
 from src.database import Postgresql
 from src.utils import Log
@@ -35,9 +37,71 @@ class Fetch:
         data = self.__preprocess.cryptorank_preprocess(
             response['data'])
 
-        # generate query
-        query_value = ''
-        for i in range(len(data['title'])):
-            query_value += f",('{data['title'][i]}', '{data['description'][i]}', '{data['url'][i]}', '{data['tags'][i]}', '{data['icon'][i]}', '{data['source'][i]}', {data['date'][i]}, '{data['major_url'][i]}', '{data['minor_url'][i]}')"
-        query = f"insert into news (title, description, url, tags, icon, source, date, major_url, minor_url) values {query_value[1:]};"
-        self.db.execute_commit(query)
+        for news in data:
+            self.__insert_news(news)
+
+    def __insert_news(self, data):
+        cur = self.db.conn.cursor()
+
+        # INSERT NEWS |>
+        cur.execute(f"""
+            select id from News where title='{data['title']}';
+        """)
+        news_id = cur.fetchone()
+
+        if news_id != None:
+            print('ALREADY EXIST')
+            return
+
+        cur.execute(f"""
+            insert into News (
+                title,
+                description,
+                url,
+                icon,
+                source,
+                major_url,
+                minor_url,
+                date
+            )
+            values (
+                %s,
+                %s,
+                %s,
+                %s,
+                %s,
+                %s,
+                %s,
+                %s
+            )
+            returning id;
+        """, (data['title'], data['description'], data['url'], data['icon'], data['source'], data['major_url'], data['minor_url'],datetime.fromtimestamp(data['date']/1000, tz=None) ))
+
+        # Inserted News ID
+        news_id = cur.fetchone()[0]
+
+        # INSERT TAGS |>
+        tags_id = []
+        for tag in data['tags']:
+            cur.execute(f"""
+                select id from Tags where name='{tag['name']}' or key='{tag['key']}';
+            """)
+            tag_id = cur.fetchone()
+            if tag_id == None:
+                cur.execute(f"""
+                    insert into Tags(name, key, symbol) values ('{tag['name']}', '{tag['key']}', '{tag['symbol']}')
+                    returning id;
+                """)
+                tag_id = cur.fetchone()
+
+            tags_id.append(tag_id[0])
+        
+        # INSERT NEWS_TAGS
+        for tag_id in tags_id:
+            cur.execute(f"""
+                insert into News_Tags (news_id, tags_id) values ({news_id}, {tag_id});
+            """)
+        
+        self.db.conn.commit()
+        cur.close()
+            
