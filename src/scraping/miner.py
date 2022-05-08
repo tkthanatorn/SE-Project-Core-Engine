@@ -16,15 +16,44 @@ class Miner:
         # on build
 
     # interval execute core process process function
-    def mining(self, time, urls=[]):
+    def mining_cryptorank(self, time):
         if time - self.run_timed > self.delay:
             self.run_timed = time
-            t = Thread(target=self.__process, args=(urls,))
+            t = Thread(target=self.__process_cryptorank)
             t.start()
 
     # <| Private Function |>
     # core process function
-    def __process(self, urls=[]):
-        for url in urls:
-            text = self.scraper.scraping(
-                url=url, value='//*[@class="post-content"]')
+    def __process_cryptorank(self):
+        # All not scraping news
+        cur = self.db.execute(f"select id, source, url from News where text is null;")
+        result = cur.fetchall()
+        data = []
+        for item in result:
+            data.append({
+                'id':item[0],
+                'source':str(item[1]).strip(),
+                'url':item[2]
+            }) 
+        
+        # All config
+        cur.execute(f"select source, xpath from source_configs;")
+        result = cur.fetchall()
+        config_scrap = {}
+        for item in result:
+            config_scrap[str(item[0]).strip()] = str(item[1]).strip()
+        print(config_scrap)
+
+        # Scraping
+        for news in data:
+            text = self.scraper.scraping(news['url'], config_scrap[news['source']])
+            text = text.replace("'", "''")
+            cur.execute(f"""
+                update News set text='{text}' where id={news['id']};
+            """)
+
+        self.db.conn.commit()
+        cur.close()
+
+
+        

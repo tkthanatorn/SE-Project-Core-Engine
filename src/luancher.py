@@ -92,8 +92,8 @@ class Launcher:
         """)
 
         # <|- Database
-        self.miner = Miner(db=self.db, delay=1)
         self.fetch = Fetch(db=self.db, delay=1)
+        self.miner = Miner(db=self.db, delay=2)
 
     # provider of interval execute methods.
     def update(self):
@@ -101,6 +101,6 @@ class Launcher:
             now = datetime.now()
 
             self.fetch.process_with_cryptorank_api(now.minute)
-
+            self.miner.mining_cryptorank(now.minute)
             # delay loop 1 second
             sleep(1)

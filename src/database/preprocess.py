@@ -5,7 +5,7 @@ class Preprocess:
         for item in data:
             tmp.append({
                 'title': item['title'].replace("'", "''") if 'title' in item.keys() else '',
-                'description': item['description'].replace("'", "''") if 'description' in item.keys() else '',
+                'description': str(item['description']).replace("'", "''") if 'description' in item.keys() else '',
                 'url': item['url'] if 'url' in item.keys() else '',
                 'tags': item['relatedCoins']
                 if 'relatedCoins' in item.keys() else [],
