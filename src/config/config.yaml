@@ -17,4 +17,6 @@ news_source:
 # news config
 news_config:
   limit: 200
+  start_timestamp: 1600300000000
+  increment_timestamp: 100000000
 # end news config

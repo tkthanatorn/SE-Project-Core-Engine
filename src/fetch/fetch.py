@@ -7,11 +7,12 @@ from src.utils import Log
 from src.config import get_config
 from src.database import Preprocess
 
-
+INCREMENT_TIMESTAMP=get_config(['news_config', 'increment_timestamp'])
 class Fetch:
     # <| Public Function |>
     def __init__(self, db: Postgresql, delay: int) -> None:
         self.__preprocess = Preprocess()
+        self.start_date = get_config(['news_config', 'start_timestamp'])
 
         self.run_timed = 0
         self.db = db
@@ -36,7 +37,9 @@ class Fetch:
 
         if max_date != None:
             max_date = int(datetime.timestamp(max_date)*1000) + 1
-            url += f"&from={max_date}"
+            url += f"&from={max_date}&to={max_date + INCREMENT_TIMESTAMP}"
+        else:
+            url += f"&from={self.start_date}&to={self.start_date + INCREMENT_TIMESTAMP}"
 
         # get data & preprocessing
         response = get(url).json()
