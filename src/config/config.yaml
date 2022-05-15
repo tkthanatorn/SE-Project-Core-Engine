@@ -2,11 +2,11 @@
 database:
   # database dev config
   dev:
-    host:
-    port: 
-    username:
-    password:
-    dbname:
+    host: 127.0.0.1
+    port: 5432
+    username: root
+    password: abcd1234
+    dbname: demeter_test
 # end database config
 
 # news source
