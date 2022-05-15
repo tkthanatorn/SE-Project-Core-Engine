@@ -31,14 +31,16 @@ class Launcher:
         self.db.execute_commit(f"""
             DROP TABLE Tags;
         """)
+        self.db.execute_commit(f"""
+            DROP TABLE Source_Configs;
+        """)
 
         # @table: News
         self.db.execute_commit(f"""
-
             CREATE TABLE IF NOT EXISTS News(
                 id serial,
                 title text not null unique,
-                description text not null,
+                description text,
                 url text not null unique,
                 icon char(500),
                 source char(64) not null,
@@ -91,6 +93,8 @@ class Launcher:
             )
         """)
 
+        # insert config
+        self._insert_config()
         # <|- Database
         self.fetch = Fetch(db=self.db, delay=1)
         self.miner = Miner(db=self.db, delay=2)
@@ -104,3 +108,16 @@ class Launcher:
             self.miner.mining_cryptorank(now.minute)
             # delay loop 1 second
             sleep(1)
+
+    # insert config
+    def _insert_config(self):
+        self.db.execute_commit(f"""
+        INSERT INTO Source_Configs(source, major_url, xpath) VALUES
+        ('Cointelegraph', 'cointelegraph.com', '//*[@class="post-content"]'),
+        ('AMBCrypto', 'ambcrypto.com', '//*[@id="mvp-content-main"]'),
+        ('U.Today', 'u.today', '//*[@class="article__content"]'),
+        ('Bitcoin News', 'news.bitcoin.com', '//*[@class="article__body"]'),
+        ('Finance Magnates', 'www.financemagnates.com', '//*[@class="article-body"]'),
+        ('Coingape', 'coingape.com', '//*[@class="main c-content"]'),
+        ('The Daily Hodl', 'dailyhodl.com', '//*[@class="content-inner "]');
+        """)
