@@ -14,9 +14,20 @@ news_source:
   cryptorank: "https://api.cryptorank.io/v0/news"
 # end news source
 
+# interval config
+interval_config:
+  fetch_delay: 10
+  miner_delay: 15
+# end interval config
+
 # news config
 news_config:
   limit: 200
   start_timestamp: 1600300000000
   increment_timestamp: 100000000
 # end news config
+
+# miner config
+miner_config:
+  scraping_limit: 100
+# end miner config

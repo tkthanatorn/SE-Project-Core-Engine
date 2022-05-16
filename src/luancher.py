@@ -1,10 +1,12 @@
 from datetime import datetime
 from time import sleep
 from src.fetch.fetch import Fetch
-from src.scraping import Scraper, scraper
 from src.scraping import Miner
 from src.database import Postgresql
 from src.config import get_config
+
+FETCH_DELAY = int(get_config(['interval_config', 'fetch_delay']))
+MINER_DELAY = int(get_config(['interval_config', 'miner_delay']))
 
 
 class Launcher:
@@ -21,19 +23,6 @@ class Launcher:
         )
 
         # TODO: setup tables
-        #! Drop Table
-        self.db.execute_commit(f"""
-            DROP TABLE News_Tags;
-        """)
-        self.db.execute_commit(f"""
-            DROP TABLE News;
-        """)
-        self.db.execute_commit(f"""
-            DROP TABLE Tags;
-        """)
-        self.db.execute_commit(f"""
-            DROP TABLE Source_Configs;
-        """)
 
         # @table: News
         self.db.execute_commit(f"""
@@ -96,8 +85,8 @@ class Launcher:
         # insert config
         self._insert_config()
         # <|- Database
-        self.fetch = Fetch(db=self.db, delay=1)
-        self.miner = Miner(db=self.db, delay=2)
+        self.fetch = Fetch(db=self.db, delay=FETCH_DELAY)
+        self.miner = Miner(db=self.db, delay=MINER_DELAY)
 
     # provider of interval execute methods.
     def update(self):

@@ -2,4 +2,4 @@ selenium
 PyYAML
 nltk
 scikit-learn
-psycopg2
+psycopg2-binary

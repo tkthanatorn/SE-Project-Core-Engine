@@ -17,6 +17,8 @@ class Scraper:
         # define options
         self.options = Options()
         self.options.add_argument('--headless')
+        self.options.add_argument('--no-sandbox')
+        self.options.add_argument('--disable-dev-shm-usage')
 
         # define selenium driver
         self.driver = Chrome(options=self.options)

@@ -1,9 +1,9 @@
 from threading import Thread
-
 from src.database.postgresql import Postgresql
-
 from .scraper import Scraper
+from src.config import get_config
 
+SCRAPING_LIMIT = int(get_config(['miner_config', 'scraping_limit']))
 
 class Miner:
     # <| Public Function |>
@@ -26,7 +26,7 @@ class Miner:
     # core process function
     def __process_cryptorank(self):
         # All not scraping news
-        cur = self.db.execute(f"select id, source, url from News where text is null;")
+        cur = self.db.execute(f"select id, source, url from News where text is null limit {SCRAPING_LIMIT};")
         result = cur.fetchall()
         data = []
         for item in result:
