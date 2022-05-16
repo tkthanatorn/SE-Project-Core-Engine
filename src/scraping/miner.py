@@ -28,7 +28,7 @@ class Miner:
     # core process function
     def __process_cryptorank(self):
         # All not scraping news
-        cur = self.db.execute(f"select id, source, url from News where text is null limit {SCRAPING_LIMIT};")
+        cur = self.db.execute(f"select id, source, url from News where text is null order by date desc limit {SCRAPING_LIMIT};")
         result = cur.fetchall()
         data = []
         for item in result:
