@@ -1,3 +1,5 @@
-Scrapy
 selenium
 PyYAML
+nltk
+scikit-learn
+psycopg2
