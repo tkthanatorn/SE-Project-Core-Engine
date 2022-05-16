@@ -23,6 +23,10 @@ class Launcher:
         )
 
         # TODO: setup tables
+        # !DROP
+        self.db.execute_commit(f"""
+            DROP TABLE Source_Configs;
+        """)
 
         # @table: News
         self.db.execute_commit(f"""
