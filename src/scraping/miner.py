@@ -1,5 +1,6 @@
 from threading import Thread
 from src.database.postgresql import Postgresql
+from src.utils.logger import Log
 from .scraper import Scraper
 from src.config import get_config
 
@@ -21,7 +22,7 @@ class Miner:
             self.run_timed = time
             t = Thread(target=self.__process_cryptorank)
             t.start()
-
+    
     # <| Private Function |>
     # core process function
     def __process_cryptorank(self):
@@ -55,5 +56,10 @@ class Miner:
         self.db.conn.commit()
         cur.close()
 
+        self._delete_empty()
 
+    Log('Miner')
+    def _delete_empty(self):
+        self.db.execute_commit(f"delete from news_tags using news where news.text='';")
+        self.db.execute_commit(f"delete from news where text='';")
         
