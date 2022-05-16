@@ -20,6 +20,7 @@ class Miner:
     @Log('Miner')
     def mining_cryptorank(self, time):
         if time - self.run_timed > self.delay:
+            print("<------------- MINING ------------->")
             self.run_timed = time
             t = Thread(target=self.__process_cryptorank)
             t.start()

@@ -96,6 +96,9 @@ class Launcher:
     def update(self):
         while True:
             now = datetime.now()
+            if now.second == 0:
+                print(
+                    f"time: {now.date()} {now.hour}:{now.minute}:{now.second} ------------------------------------------------------------------")
 
             self.fetch.process_with_cryptorank_api(now.minute)
             self.miner.mining_cryptorank(now.minute)
