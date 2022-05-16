@@ -17,7 +17,6 @@ class Miner:
         # on build
 
     # interval execute core process process function
-    @Log('Miner')
     def mining_cryptorank(self, time):
         if time - self.run_timed > self.delay:
             print("<------------- MINING ------------->")
