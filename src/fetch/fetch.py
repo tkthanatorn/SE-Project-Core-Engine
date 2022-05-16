@@ -19,7 +19,7 @@ class Fetch:
         self.delay = delay
 
     def process_with_cryptorank_api(self, time):
-        if time - self.run_timed > self.delay:
+        if time % self.delay == 0 and time != self.run_timed:
             self.run_timed = time
             t = Thread(target=self.__process_with_cryptorank_api)
             t.start()

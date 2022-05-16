@@ -18,7 +18,7 @@ class Miner:
 
     # interval execute core process process function
     def mining_cryptorank(self, time):
-        if time - self.run_timed > self.delay:
+        if time % self.delay == 0 and time != self.run_timed:
             print("<------------- MINING ------------->")
             self.run_timed = time
             t = Thread(target=self.__process_cryptorank)
