@@ -57,8 +57,6 @@ class Miner:
         self.db.conn.commit()
         cur.close()
 
-        self._delete_empty()
-
     Log('Miner')
     def _delete_empty(self):
         self.db.execute_commit(f"delete from news_tags using news where news.text='';")
