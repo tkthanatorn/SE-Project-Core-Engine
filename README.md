@@ -1,4 +1,5 @@
 # Centiment Engine
+Console application for scrapping cryptocurrency news from other sites with xpath and predict sentimental of those article by tokenize article into sentences and predicted sentimental by Machine Learning then use majority scoring to score and find the result of those article. all of scrapping data those process in this application will save into SQL database for let's others application to take them to show.
 
 ## Setup
 1. Install specific dependencies of this project.
