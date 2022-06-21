@@ -24,14 +24,13 @@ class Scraper:
     # scraping function
     @Log('Scraper')
     def scraping(self, url: str, value: str, by=BY_XPATH):
+        driver = Chrome(options=self.options)
         try:
-            driver = Chrome(options=self.options)
             driver.get(url)  # fetch url
             # find element by config
             ele = driver.find_element(by=by, value=value)
-            driver.close()
-            del driver
             print(f"[success] url:{url}")
+            del driver
             return ele.text  # return result
         except NoSuchElementException:
             print(f"[error] url:{url} : NoSuchElementExeption")
