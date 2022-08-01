@@ -1,9 +1,8 @@
-class Preprocess:
-    def cryptorank_preprocess(self, data) -> dict:
-        tmp = []
+def cryptorank_preprocess(data:list) -> list:
+        result = []
 
         for item in data:
-            tmp.append({
+            result.append({
                 'title': item['title'].replace("'", "''") if 'title' in item.keys() else '',
                 'description': str(item['description']).replace("'", "''") if 'description' in item.keys() else '',
                 'url': item['url'] if 'url' in item.keys() else '',
@@ -20,4 +19,4 @@ class Preprocess:
                     '/')[3] if 'url' in item.keys() else ''
             })
 
-        return tmp
+        return result

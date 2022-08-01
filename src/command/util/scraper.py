@@ -1,9 +1,8 @@
-from click import option
-from src.utils import Log
 from selenium.webdriver import Chrome
 from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.common.by import By
 from selenium.common.exceptions import NoSuchElementException, TimeoutException, WebDriverException
+from src.util.logging import log_error, log_info
 
 BY_XPATH = By.XPATH
 BY_CLASS = By.CLASS_NAME
@@ -14,30 +13,26 @@ BY_TAG_NAME = By.TAG_NAME
 
 
 class Scraper:
-    def __init__(self, options=['--headless']):
-        # define options
+    def __init__(self):
         self.options = Options()
         self.options.add_argument('--headless')
         self.options.add_argument('--no-sandbox')
         self.options.add_argument('--disable-dev-shm-usage')
-
-    # scraping function
-    @Log('Scraper')
+    
     def scraping(self, url: str, value: str, by=BY_XPATH):
         driver = Chrome(options=self.options)
         try:
-            driver.get(url)  # fetch url
-            # find element by config
+            driver.get(url)
             ele = driver.find_element(by=by, value=value)
-            print(f"[success] url:{url}")
+            log_info(f"Scraped: {url}")
             del driver
-            return ele.text  # return result
+            return ele.text
         except NoSuchElementException:
-            print(f"[error] url:{url} : NoSuchElementExeption")
+            log_error(f"NoSuchElementException: {url}")
             return ''
         except TimeoutException:
-            print(f"[error] url:{url} : TimeoutException")
+            log_error(f"TimeoutException: {url}")
             return ''
         except WebDriverException:
-            print(f"[error] url:{url} : WebDriverException")
+            log_error(f"WebDriverException: {url}")
             return ''
