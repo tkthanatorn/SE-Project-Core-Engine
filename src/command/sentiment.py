@@ -23,12 +23,10 @@ from src.config import get_config
 from src.util.logging import log_info
 
 _DATA_PATH = os.path.abspath(os.path.join(os.path.dirname(__file__), "data.csv"))
-_SENTIMENT_LIMIT = int(get_config(['sentiment_config', 'sentiment_limit']))
 
 class Sentiment:
-    def __init__(self, db: Session):
+    def __init__(self):
         log_info("loading sentiment model...")
-        self.news_db = NewsDatabase(db)
         self._load()
     
     def preprocessing(self, data: list[str]):
@@ -92,14 +90,4 @@ class Sentiment:
         predicted = self.model.predict(prep)
         scores = Counter(predicted)
         return self.majority_score(scores)
-    
-    def analyze(self):
-        news = self.news_db.get_null_sentiment(_SENTIMENT_LIMIT)
-        log_info(f"sentiment analyze ({len(news)} news)...")
-
-        for item in news:
-            text = item.text
-            sentiment, polarity = self.article_predict(text)
-            data = {"sentiment": sentiment, "polarity": polarity}
-            self.news_db.update(item.id, data)
 

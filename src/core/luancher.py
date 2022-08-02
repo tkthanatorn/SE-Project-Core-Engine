@@ -8,7 +8,7 @@ from src.config import engine
 from src.config import SessionLocal
 from src.model import SourceConfigs
 from src import model
-from src.controller import FetchController, MinerController, SentimentController
+from src.controller import FetchController, MinerController
 
 
 def initialize(db: Session):
@@ -38,7 +38,6 @@ def luancher():
     db = SessionLocal()
     fetch_controller = FetchController(db)
     miner_controller = MinerController(db)
-    sentiment_controller = SentimentController(db)
     initialize(db)
 
     while True:
@@ -46,5 +45,4 @@ def luancher():
         log_info("-"*20)
         fetch_controller.luanch(now.timestamp())
         miner_controller.luanch(now.timestamp())
-        sentiment_controller.luanch(now.timestamp())
         sleep(1)
