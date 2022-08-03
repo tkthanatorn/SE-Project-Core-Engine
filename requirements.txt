@@ -1,0 +1,8 @@
+SQLAlchemy
+SQLAlchemy-Utils
+sklearn
+scikit-learn
+PyYAML
+pandas
+python-dotenv
+nltk

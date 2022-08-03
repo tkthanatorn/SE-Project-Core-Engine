@@ -6,7 +6,6 @@ from nltk.stem import PorterStemmer
 from nltk.tokenize import sent_tokenize
 from string import punctuation
 import re
-from sqlalchemy.orm import Session
 
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.model_selection import cross_val_score, ShuffleSplit
@@ -18,8 +17,6 @@ import numpy as np
 from collections import Counter
 import os
 
-from src.database import NewsDatabase
-from src.config import get_config
 from src.util.logging import log_info
 
 _DATA_PATH = os.path.abspath(os.path.join(os.path.dirname(__file__), "data.csv"))
