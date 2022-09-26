@@ -39,7 +39,7 @@ class NewsTags(Base):
     __tablename__ = "news_tags"
     id = Column(Integer, primary_key=True)
     news_id = Column(Integer, ForeignKey("news.id"))
-    tasgs_id = Column(Integer, ForeignKey("tags.id"))
+    tags_id = Column(Integer, ForeignKey("tags.id"))
 
 
 # Source Config Model
