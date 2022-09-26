@@ -9,9 +9,9 @@ class News(Base):
     __tablename__ = "news"
 
     id = Column(Integer, primary_key=True, index=True)
-    title = Column(Text, unique=True, nullable=False)
+    title = Column(Text, nullable=False)
     description = Column(Text)
-    url = Column(Text, unique=True, nullable=False)
+    url = Column(Text,  nullable=False)
     icon = Column(String(500))
     source = Column(String(500), nullable=False)
     major_url = Column(String(100), nullable=False)
