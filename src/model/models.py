@@ -20,7 +20,7 @@ class News(Base):
     polarity = Column(Float)
     sentiment = Column(String(32))
     date = Column(DateTime)
-    tags = relationship('Tags', secondary='news_tags')
+    tags = relationship('Tags', secondary='news_tags', cascade="all, delete-orphan")
 
 
 # Tags Model
@@ -31,7 +31,7 @@ class Tags(Base):
     name = Column(String(64), unique=True)
     key = Column(String(64), unique=True)
     symbol = Column(String(32))
-    news = relationship('News', secondary='news_tags', overlaps="tags")
+    news = relationship('News', secondary='news_tags', overlaps="tags", cascade="all, delete-orphan")
 
 
 # Relation News and Tags Model
