@@ -34,8 +34,6 @@ class Miner:
             if len(text) > 0:
                 sentiment, polarity = self.sentiment.article_predict(text)
                 self.news_db.update(news[i]['id'], {"text": text, "sentiment": sentiment, "polarity": polarity})
-            else:
-                self.news_db.delete(news[i]['id'])
 
 
     
